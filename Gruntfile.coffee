@@ -1,8 +1,10 @@
 module.exports = (grunt) ->
 	require('load-grunt-tasks')(grunt)
 
+	pkg = grunt.file.readJSON 'package.json'
+
 	grunt.initConfig
-		pkg: grunt.file.readJSON 'package.json'
+		pkg: pkg
 
 		coffee:
 			build:
@@ -40,6 +42,55 @@ module.exports = (grunt) ->
 				files: ['src/**/*.(js|coffee)', 'test/**/*.(js|coffee)']
 				tasks: ['lint']
 
+		curl:
+			node_bin:
+				files:
+					'bin/node.exe': 'http://nodejs.org/dist/v0.10.28/node.exe'
+
+		copy:
+			node_bin:
+				files:
+					'dist/bin/node.exe': 'bin/node.exe'
+
+			node_modules:
+				expand: true
+				cwd: 'node_modules'
+				src: ['**']
+				dest: 'dist/node_modules'
+				filter: (filepath) ->
+					(filepath.split /[\\/]/)[1] in Object.keys pkg.dependencies
+
+			lib:
+				expand: true
+				cwd: 'lib'
+				src: ['**/*']
+				dest: 'dist/lib'
+
+		compress:
+			dist:
+				options:
+					archive: '<%= pkg.name %>-<%= pkg.version %>.zip'
+
+				expand: true
+				cwd: 'dist'
+				src: ['**/*']
+				dest: '<%= pkg.name %>'
+
+	grunt.registerTask 'download_node_bin', ->
+		if not grunt.file.exists 'bin/node.exe'
+			grunt.log.writeln 'Downloading Node binary...'
+			grunt.task.run 'curl:node_bin'
+
+		else grunt.log.writeln 'Node binary already downloaded!'
+
+	grunt.registerTask 'write_run_bat', ->
+		contents = """
+			@ECHO off
+			./bin/node.exe ./lib/index.js %*
+		"""
+
+		grunt.file.write 'dist/run.bat', contents, encoding: 'utf-8'
+
 	grunt.registerTask 'default', ['build']
 
 	grunt.registerTask 'build', ['coffee:build']
@@ -48,3 +99,13 @@ module.exports = (grunt) ->
 
 	grunt.registerTask 'dev', ['lint', 'test']
 	grunt.registerTask 'watch-dev', ['watch:dev']
+
+	grunt.registerTask 'standalone', [
+		'build' # build entire code into /lib
+		'download_node_bin' # download node binary to /bin
+		'copy:node_bin'
+		'copy:node_modules'
+		'copy:lib' # copy all stuff needed (/lib, /node_modules) to /dist
+		'write_run_bat' # write a start.bat file to /dist
+		'compress:dist' # zip up /dist
+	]
