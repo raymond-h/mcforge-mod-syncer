@@ -86,7 +86,7 @@ module.exports = (grunt) ->
 	grunt.registerTask 'write_run_bat', ->
 		contents = """
 			@ECHO off
-			./bin/node.exe ./lib/index.js %*
+			./bin/node.exe <%= pkg.main %> %*
 		"""
 
 		grunt.file.write 'dist/run.bat', contents, encoding: 'utf-8'
