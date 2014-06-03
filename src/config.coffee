@@ -14,7 +14,7 @@ defaults =
 		port: 25568
 
 try
-	config = ini.parse fs.readFileSync configFile
+	config = ini.parse fs.readFileSync configFile, encoding: 'utf-8'
 
 catch e
 	if e.code is 'ENOENT'
