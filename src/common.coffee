@@ -9,14 +9,18 @@ minimatchMulti = (file, patterns, options) ->
 
 	true
 
-exports.getChecksums = (folder, callback) ->
+exports.getChecksums = (folder, filterPatterns, callback) ->
+	unless callback?
+		callback = filterPatterns
+		filterPatterns = []
+
 	files = {}
 	walker = (require 'walk').walk folder
 
 	walker.on 'file', (root, fileStats, next) ->
 		file = path.join root, fileStats.name
 
-		return next() unless (minimatchMulti file, [], matchBase: true)
+		return next() unless (minimatchMulti file, filterPatterns, matchBase: true)
 
 		fs.readFile file, (err, buf) ->
 			return (console.error err.stack; next()) if err?
