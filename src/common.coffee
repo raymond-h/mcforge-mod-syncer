@@ -3,16 +3,22 @@ path = require 'path'
 md5 = require 'MD5'
 minimatch = require 'minimatch'
 
+exports.minimatchMultiAny = (file, patterns, options) ->
+	for pattern in patterns
+		return true if minimatch file, pattern, options
+
+	false
+
 exports.minimatchMulti = (file, patterns, options) ->
 	for pattern in patterns
 		return false if not minimatch file, pattern, options
 
 	true
 
-exports.getChecksums = (folder, filterPatterns, callback) ->
+exports.getChecksums = (folder, excludePatterns, callback) ->
 	unless callback?
-		callback = filterPatterns
-		filterPatterns = []
+		callback = excludePatterns
+		excludePatterns = []
 
 	files = {}
 	walker = (require 'walk').walk folder
@@ -20,7 +26,9 @@ exports.getChecksums = (folder, filterPatterns, callback) ->
 	walker.on 'file', (root, fileStats, next) ->
 		file = path.join root, fileStats.name
 
-		return next() unless (minimatchMulti file, filterPatterns, matchBase: true)
+		if excludePatterns.length > 0 and
+			(exports.minimatchMulti file, excludePatterns, matchBase: true)
+				return next()
 
 		fs.readFile file, (err, buf) ->
 			return (console.error err.stack; next()) if err?

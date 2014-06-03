@@ -5,9 +5,9 @@ request = require 'request'
 mkdirp = require 'mkdirp'
 
 {client} = require './config'
-{folders} = client
+{folders, exclude} = client
 
-{getChecksums} = require './common'
+{getChecksums, minimatchMultiAny} = require './common'
 
 hostAddress = "#{client.host}:#{client.port}"
 
@@ -15,6 +15,9 @@ handleDifferences = (differences) ->
 	for d in differences
 		do (d) ->
 			sourcePath = "#{d.path[0]}/#{d.path[1]}"
+
+			excludePatterns = exclude[d.path[0]] ? []
+			return if minimatchMultiAny sourcePath, excludePatterns, matchBase: true
 
 			switch d.kind
 				when 'D'

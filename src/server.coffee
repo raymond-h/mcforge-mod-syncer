@@ -5,7 +5,7 @@ serveStatic = require 'serve-static'
 _ = require 'underscore'
 
 {server} = require './config'
-{folders} = server
+{folders, exclude} = server
 
 {getChecksums} = require './common'
 
@@ -19,13 +19,13 @@ app.get '/files-list.json', (req, res) ->
 	console.log "New files list request from #{req.ip}"
 	console.log 'Generating checksums for mods...'
 
-	getChecksums folders.mods, (err, mods) ->
-		getChecksums folders.clientMods, (err, clientMods) ->
+	getChecksums folders.mods, exclude.mods, (err, mods) ->
+		getChecksums folders.clientMods, exclude.mods, (err, clientMods) ->
 			_.extend mods, clientMods
 
 			console.log 'Generating checksums for configs...'
 
-			getChecksums folders.config, (err, config) ->
+			getChecksums folders.config, exclude.config, (err, config) ->
 				console.log 'Done'
 
 				console.log { mods, config }
