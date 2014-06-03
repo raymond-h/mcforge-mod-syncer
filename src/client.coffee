@@ -2,7 +2,6 @@ fs = require 'fs'
 path = require 'path'
 request = require 'request'
 {diff} = require 'deep-diff'
-md5 = require 'MD5'
 mkdirp = require 'mkdirp'
 
 {folders, getChecksums} = require './common'

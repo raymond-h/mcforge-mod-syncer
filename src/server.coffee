@@ -2,7 +2,6 @@ fs = require 'fs'
 path = require 'path'
 express = require 'express'
 serveStatic = require 'serve-static'
-md5 = require 'MD5'
 
 {folders, getChecksums} = require './common'
 

@@ -1,5 +1,6 @@
 fs = require 'fs'
 path = require 'path'
+md5 = require 'MD5'
 
 exports.folders =
 	mods: './mods'
