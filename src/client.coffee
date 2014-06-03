@@ -4,9 +4,8 @@ request = require 'request'
 {diff} = require 'deep-diff'
 mkdirp = require 'mkdirp'
 
-{folders, getChecksums} = require './common'
-
 {server, folders} = require './config'
+{getChecksums} = require './common'
 
 handleDifferences = (differences) ->
 	for d in differences

@@ -3,8 +3,8 @@ path = require 'path'
 express = require 'express'
 serveStatic = require 'serve-static'
 
-{server} = require './config'
-{folders, getChecksums} = require './common'
+{server, folders} = require './config'
+{getChecksums} = require './common'
 
 app = express()
 

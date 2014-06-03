@@ -2,8 +2,6 @@ fs = require 'fs'
 path = require 'path'
 md5 = require 'MD5'
 
-exports.folders = (require './config').folders
-
 exports.getChecksums = (folder, callback) ->
 	files = {}
 	walker = (require 'walk').walk folder
