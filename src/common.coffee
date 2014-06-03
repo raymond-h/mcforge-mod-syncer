@@ -3,7 +3,7 @@ path = require 'path'
 md5 = require 'MD5'
 minimatch = require 'minimatch'
 
-minimatchMulti = (file, patterns, options) ->
+exports.minimatchMulti = (file, patterns, options) ->
 	for pattern in patterns
 		return false if not minimatch file, pattern, options
 
