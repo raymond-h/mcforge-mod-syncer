@@ -3,4 +3,5 @@ lib/
 bin/
 dist/
 
+*.zip
 *.log

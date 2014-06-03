@@ -71,10 +71,20 @@ module.exports = (grunt) ->
 				options:
 					archive: '<%= pkg.name %>-<%= pkg.version %>.zip'
 
-				expand: true
-				cwd: 'dist'
-				src: ['**/*']
-				dest: '<%= pkg.name %>'
+				files: [
+					{
+						expand: true
+						cwd: 'dist'
+						src: ['**/*', '!run.bat']
+						dest: '<%= pkg.name %>'
+					}
+					{
+						expand: true
+						cwd: 'dist'
+						src: ['run.bat']
+						dest: ''
+					}
+				]
 
 	grunt.registerTask 'download_node_bin', ->
 		if not grunt.file.exists 'bin/node.exe'
@@ -86,7 +96,7 @@ module.exports = (grunt) ->
 	grunt.registerTask 'write_run_bat', ->
 		contents = """
 			@ECHO off
-			./bin/node.exe <%= pkg.main %> %*
+			./<%= pkg.name %>/bin/node.exe <%= pkg.main %> %*
 		"""
 
 		grunt.file.write 'dist/run.bat', contents, encoding: 'utf-8'
