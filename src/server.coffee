@@ -30,6 +30,7 @@ app.use '/mods', serveStatic path.join process.cwd(), '/mods'
 app.use '/config', serveStatic path.join process.cwd(), '/config'
 
 app.get '/files-list.json', (req, res) ->
+	console.log "New files list request from #{req.ip}"
 	console.log 'Generating checksums for mods...'
 
 	getChecksums folders.mods, (err, mods) ->

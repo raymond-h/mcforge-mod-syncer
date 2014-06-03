@@ -52,13 +52,19 @@ handleDifferences = (differences) ->
 console.log 'Fetching file checksums...'
 request.get "http://#{server.host}:#{server.port}/files-list.json",
 	(err, res, files) ->
+		return console.error err.stack if err?
+
 		files = JSON.parse files
 		console.log 'Generating checksums for local mods...'
 
 		getChecksums folders.mods, (err, mods) ->
+			return console.error err.stack if err?
+
 			console.log 'Generating checksums for local configs...'
 
 			getChecksums folders.config, (err, config) ->
+				return console.error err.stack if err?
+				
 				console.log 'Done'
 
 				# console.log { mods, config }
