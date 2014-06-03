@@ -3,6 +3,7 @@ path = require 'path'
 express = require 'express'
 serveStatic = require 'serve-static'
 
+{server} = require './config'
 {folders, getChecksums} = require './common'
 
 app = express()
@@ -24,4 +25,4 @@ app.get '/files-list.json', (req, res) ->
 
 			res.json { mods, config }
 
-app.listen 25568
+app.listen server.port

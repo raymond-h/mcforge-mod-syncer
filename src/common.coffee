@@ -2,9 +2,7 @@ fs = require 'fs'
 path = require 'path'
 md5 = require 'MD5'
 
-exports.folders =
-	mods: './mods'
-	config: './config'
+exports.folders = (require './config').folders
 
 exports.getChecksums = (folder, callback) ->
 	files = {}

@@ -6,9 +6,7 @@ mkdirp = require 'mkdirp'
 
 {folders, getChecksums} = require './common'
 
-server =
-	host: 'kayarrcraft.playat.ch'
-	port: 25568
+{server} = require './config'
 
 handleDifferences = (differences) ->
 	for d in differences
