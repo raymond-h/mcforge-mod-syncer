@@ -21,7 +21,7 @@ catch e
 		console.log "Config file '#{configFile}' does not exist, creating..."
 
 		fs.writeFileSync configFile, ini.stringify defaults
-		config = {}
+		process.exit 0
 
 	else console.error e.stack
 
