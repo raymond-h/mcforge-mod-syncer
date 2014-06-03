@@ -26,7 +26,6 @@ handleDifferences = (differences) ->
 
 				when 'N', 'E'
 					targetPath = path.join folders[d.path[0]], d.path[1]
-					console.log "Target folder is #{targetPath}"
 
 					mkdirp (path.dirname targetPath), (err) ->
 						return console.error err.stack if err?
@@ -57,7 +56,7 @@ request.get "http://#{hostAddress}/files-list.json",
 				
 				console.log 'Done'
 
-				console.log { mods, config }
+				# console.log { mods, config }
 
 				# console.log (diff({mods, config}, files) ? [])
 
