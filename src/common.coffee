@@ -1,3 +1,6 @@
+fs = require 'fs'
+path = require 'path'
+
 exports.folders =
 	mods: './mods'
 	config: './config'
