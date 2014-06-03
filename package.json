@@ -22,6 +22,7 @@
     "grunt-curl": "^1.5.1"
   },
   "dependencies": {
-    "underscore": "^1.6.0"
+    "underscore": "^1.6.0",
+    "yargs": "^1.2.2"
   }
 }
