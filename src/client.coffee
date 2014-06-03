@@ -6,27 +6,30 @@ mkdirp = require 'mkdirp'
 
 {folders, getChecksums} = require './common'
 
-{server} = require './config'
+{server, folders} = require './config'
 
 handleDifferences = (differences) ->
 	for d in differences
 		do (d) ->
-			p = d.path[1]
+			sourcePath = d.path[1]
 
 			switch d.kind
 				when 'D'
-					fs.unlinkSync p
-					console.log "Deleted #{p}"
+					fs.unlinkSync sourcePath
+					console.log "Deleted #{sourcePath}"
 
 				when 'N', 'E'
-					mkdirp (path.dirname p), (err) ->
+					targetPath = path.join folders[d.path[0]], sourcePath.split('/')[1..]...
+					console.log "Target folder is #{targetPath}"
+
+					mkdirp (path.dirname targetPath), (err) ->
 						return console.error err.stack if err?
 
-						console.log "Downloading #{p}..."
-						request.get "http://#{server.host}:#{server.port}/#{p}"
-						.pipe fs.createWriteStream p
+						console.log "Downloading #{sourcePath}..."
+						request.get "http://#{server.host}:#{server.port}/#{sourcePath}"
+						.pipe fs.createWriteStream targetPath
 						.on 'close', ->
-							console.log "Downloaded #{p}"
+							console.log "Downloaded #{sourcePath}"
 
 console.log 'Fetching file checksums...'
 request.get "http://#{server.host}:#{server.port}/files-list.json",
