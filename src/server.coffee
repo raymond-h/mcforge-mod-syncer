@@ -38,6 +38,8 @@ app.get '/files-list.json', (req, res) ->
 		getChecksums folders.config, (err, config) ->
 			console.log 'Done'
 
+			# console.log { mods, config }
+
 			res.json { mods, config }
 
 app.listen 25568
