@@ -75,13 +75,13 @@ module.exports = (grunt) ->
 					{
 						expand: true
 						cwd: 'dist'
-						src: ['**/*', '!run.bat']
+						src: ['**/*', '!run_sync.bat']
 						dest: '<%= pkg.name %>'
 					}
 					{
 						expand: true
 						cwd: 'dist'
-						src: ['run.bat']
+						src: ['run_sync.bat']
 						dest: ''
 					}
 				]
@@ -99,7 +99,7 @@ module.exports = (grunt) ->
 			"./#{pkg.name}/bin/node.exe" "./#{pkg.name}/#{pkg.main}" %*
 		"""
 
-		grunt.file.write 'dist/run.bat', contents, encoding: 'utf-8'
+		grunt.file.write 'dist/run_sync.bat', contents, encoding: 'utf-8'
 
 	grunt.registerTask 'default', ['build']
 
