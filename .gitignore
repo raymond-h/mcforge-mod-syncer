@@ -5,6 +5,7 @@ dist/
 
 config/
 mods/
+client-mods/
 sync_config.ini
 
 *.zip
