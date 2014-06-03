@@ -17,7 +17,7 @@ handleDifferences = (differences) ->
 			sourcePath = "#{d.path[0]}/#{d.path[1]}"
 
 			excludePatterns = exclude[d.path[0]] ? []
-			return if minimatchMultiAny sourcePath, excludePatterns, matchBase: true
+			return if minimatchMultiAny sourcePath, excludePatterns, matchBase: true, nocase: true
 
 			switch d.kind
 				when 'D'
