@@ -27,7 +27,7 @@ handleDifferences = (differences) ->
 						console.log "Downloading #{p}..."
 						request.get "http://#{server.host}:#{server.port}/#{p}"
 						.pipe fs.createWriteStream p
-						.on 'end', ->
+						.on 'close', ->
 							console.log "Downloaded #{p}"
 
 console.log 'Fetching file checksums...'
@@ -37,7 +37,7 @@ request.get "http://#{server.host}:#{server.port}/files-list.json",
 
 		files = JSON.parse files
 
-		console.log files
+		# console.log files
 		console.log 'Generating checksums for local mods...'
 
 		getChecksums folders.mods, (err, mods) ->
@@ -50,8 +50,8 @@ request.get "http://#{server.host}:#{server.port}/files-list.json",
 				
 				console.log 'Done'
 
-				console.log { mods, config }
+				# console.log { mods, config }
 
-				console.log (diff({mods, config}, files) ? [])
+				# console.log (diff({mods, config}, files) ? [])
 
-				# handleDifferences diff({mods, config}, files) ? []
+				handleDifferences diff({mods, config}, files) ? []

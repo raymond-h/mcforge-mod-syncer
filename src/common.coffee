@@ -11,7 +11,7 @@ exports.getChecksums = (folder, callback) ->
 	walker = (require 'walk').walk folder
 
 	walker.on 'file', (root, fileStats, next) ->
-		file = (path.join root, fileStats.name).replace '\\', '/'
+		file = (path.join root, fileStats.name).replace /[\\]/g, '/'
 
 		fs.readFile file, (err, buf) ->
 			return (console.error err.stack; next()) if err?
