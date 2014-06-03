@@ -1,10 +1,8 @@
 module.exports = (grunt) ->
 	require('load-grunt-tasks')(grunt)
 
-	pkg = grunt.file.readJSON 'package.json'
-
 	grunt.initConfig
-		pkg: pkg
+		pkg: grunt.file.readJSON 'package.json'
 
 		coffee:
 			build:
@@ -58,6 +56,7 @@ module.exports = (grunt) ->
 				src: ['**']
 				dest: 'dist/node_modules'
 				filter: (filepath) ->
+					pkg = grunt.config 'pkg'
 					(filepath.split /[\\/]/)[1] in Object.keys pkg.dependencies
 
 			lib:
@@ -94,6 +93,8 @@ module.exports = (grunt) ->
 		else grunt.log.writeln 'Node binary already downloaded!'
 
 	grunt.registerTask 'write_run_bat', ->
+		pkg = grunt.config 'pkg'
+
 		contents = """
 			@ECHO off
 			"./#{pkg.name}/bin/node.exe" "./#{pkg.name}/#{pkg.main}" %*
