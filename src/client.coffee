@@ -11,7 +11,7 @@ mkdirp = require 'mkdirp'
 handleDifferences = (differences) ->
 	for d in differences
 		do (d) ->
-			p = d.path[1].replace '\\', '/'
+			p = d.path[1]
 
 			switch d.kind
 				when 'D'
