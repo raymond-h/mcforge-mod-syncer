@@ -13,7 +13,9 @@ defaults =
 			mods: './mods'
 			config: './config'
 
-		exclude: []
+		exclude:
+			mods: ['*']
+			config: ['*']
 
 	server:
 		port: 25568
@@ -23,7 +25,9 @@ defaults =
 			clientMods: './client-mods'
 			config: './config'
 
-		exclude: []
+		exclude:
+			mods: ['*']
+			config: ['*']
 
 try
 	config = ini.parse fs.readFileSync configFile, encoding: 'utf-8'
