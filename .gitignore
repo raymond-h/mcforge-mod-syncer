@@ -3,5 +3,9 @@ lib/
 bin/
 dist/
 
+config/
+mods/
+sync_config.ini
+
 *.zip
 *.log
