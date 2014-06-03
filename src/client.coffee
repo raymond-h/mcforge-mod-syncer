@@ -4,8 +4,12 @@ request = require 'request'
 {diff} = require 'deep-diff'
 mkdirp = require 'mkdirp'
 
-{server, folders} = require './config'
+{client} = require './config'
+{folders} = client
+
 {getChecksums} = require './common'
+
+hostAddress = "#{client.host}:#{client.port}"
 
 handleDifferences = (differences) ->
 	for d in differences
@@ -25,13 +29,13 @@ handleDifferences = (differences) ->
 						return console.error err.stack if err?
 
 						console.log "Downloading #{sourcePath}..."
-						request.get "http://#{server.host}:#{server.port}/#{sourcePath}"
+						request.get "http://#{hostAddress}/#{sourcePath}"
 						.pipe fs.createWriteStream targetPath
 						.on 'close', ->
 							console.log "Downloaded #{sourcePath}"
 
 console.log 'Fetching file checksums...'
-request.get "http://#{server.host}:#{server.port}/files-list.json",
+request.get "http://#{hostAddress}/files-list.json",
 	(err, res, files) ->
 		return console.error err.stack if err?
 

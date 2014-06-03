@@ -5,17 +5,25 @@ _ = require 'underscore'
 configFile = './sync_config.ini'
 
 defaults =
-	folders:
-		mods: './mods'
-		config: './config'
-
-	server:
-		host: 'kayarrcraft.playat.ch'
+	client:
+		host: 'localhost'
 		port: 25568
 
-	ignore:
-		server: ['*']
-		client: ['*']
+		folders:
+			mods: './mods'
+			config: './config'
+
+		exclude: []
+
+	server:
+		port: 25568
+
+		folders:
+			mods: './mods'
+			clientMods: './client-mods'
+			config: './config'
+
+		exclude: []
 
 try
 	config = ini.parse fs.readFileSync configFile, encoding: 'utf-8'
