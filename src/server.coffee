@@ -4,25 +4,7 @@ express = require 'express'
 serveStatic = require 'serve-static'
 md5 = require 'MD5'
 
-folders =
-	mods: './mods'
-	config: './config'
-
-getChecksums = (folder, callback) ->
-	files = {}
-	walker = (require 'walk').walk folder
-
-	walker.on 'file', (root, fileStats, next) ->
-		file = path.join root, fileStats.name
-
-		fs.readFile file, (err, buf) ->
-			return (console.error err.stack; next()) if err?
-
-			files[file] = md5 buf
-			next()
-
-	walker.on 'end', ->
-		callback null, files
+{folders, getChecksums} = require './common'
 
 app = express()
 

@@ -5,29 +5,11 @@ request = require 'request'
 md5 = require 'MD5'
 mkdirp = require 'mkdirp'
 
+{folders, getChecksums} = require './common'
+
 server =
-	host: 'localhost'
+	host: 'kayarrcraft.playat.ch'
 	port: 25568
-
-folders =
-	mods: './mods'
-	config: './config'
-
-getChecksums = (folder, callback) ->
-	files = {}
-	walker = (require 'walk').walk folder
-
-	walker.on 'file', (root, fileStats, next) ->
-		file = path.join root, fileStats.name
-
-		fs.readFile file, (err, buf) ->
-			return (console.error err.stack; next()) if err?
-
-			files[file] = md5 buf
-			next()
-
-	walker.on 'end', ->
-		callback null, files
 
 handleDifferences = (differences) ->
 	for d in differences
@@ -55,6 +37,8 @@ request.get "http://#{server.host}:#{server.port}/files-list.json",
 		return console.error err.stack if err?
 
 		files = JSON.parse files
+
+		console.log files
 		console.log 'Generating checksums for local mods...'
 
 		getChecksums folders.mods, (err, mods) ->
@@ -67,6 +51,8 @@ request.get "http://#{server.host}:#{server.port}/files-list.json",
 				
 				console.log 'Done'
 
-				# console.log { mods, config }
+				console.log { mods, config }
 
-				handleDifferences diff({mods, config}, files) ? []
+				console.log (diff({mods, config}, files) ? [])
+
+				# handleDifferences diff({mods, config}, files) ? []
