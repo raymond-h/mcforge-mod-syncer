@@ -50,7 +50,7 @@ request.get "http://#{server.host}:#{server.port}/files-list.json",
 				
 				console.log 'Done'
 
-				# console.log { mods, config }
+				console.log { mods, config }
 
 				# console.log (diff({mods, config}, files) ? [])
 

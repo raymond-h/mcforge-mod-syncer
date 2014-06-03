@@ -1,6 +1,13 @@
 fs = require 'fs'
 path = require 'path'
 md5 = require 'MD5'
+minimatch = require 'minimatch'
+
+minimatchMulti = (file, patterns, options) ->
+	for pattern in patterns
+		return false if not minimatch file, pattern, options
+
+	true
 
 exports.getChecksums = (folder, callback) ->
 	files = {}
@@ -8,6 +15,8 @@ exports.getChecksums = (folder, callback) ->
 
 	walker.on 'file', (root, fileStats, next) ->
 		file = (path.join root, fileStats.name).replace /[\\]/g, '/'
+
+		return next() unless (minimatchMulti file, [], matchBase: true)
 
 		fs.readFile file, (err, buf) ->
 			return (console.error err.stack; next()) if err?

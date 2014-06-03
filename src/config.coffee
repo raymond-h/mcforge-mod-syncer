@@ -13,6 +13,10 @@ defaults =
 		host: 'kayarrcraft.playat.ch'
 		port: 25568
 
+	ignore:
+		server: ['*']
+		client: ['*']
+
 try
 	config = ini.parse fs.readFileSync configFile, encoding: 'utf-8'
 
