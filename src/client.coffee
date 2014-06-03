@@ -10,7 +10,7 @@ mkdirp = require 'mkdirp'
 handleDifferences = (differences) ->
 	for d in differences
 		do (d) ->
-			sourcePath = d.path[1]
+			sourcePath = "#{d.path[0]}/#{d.path[1]}"
 
 			switch d.kind
 				when 'D'
@@ -18,7 +18,7 @@ handleDifferences = (differences) ->
 					console.log "Deleted #{sourcePath}"
 
 				when 'N', 'E'
-					targetPath = path.join folders[d.path[0]], sourcePath.split('/')[1..]...
+					targetPath = path.join folders[d.path[0]], d.path[1]
 					console.log "Target folder is #{targetPath}"
 
 					mkdirp (path.dirname targetPath), (err) ->
