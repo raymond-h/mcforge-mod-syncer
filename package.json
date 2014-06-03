@@ -23,6 +23,12 @@
   },
   "dependencies": {
     "underscore": "^1.6.0",
-    "yargs": "^1.2.2"
+    "yargs": "^1.2.2",
+    "express": "^4.4.0",
+    "serve-favicon": "^2.0.0",
+    "morgan": "^1.1.1",
+    "serve-static": "^1.2.0",
+    "walk": "^2.3.3",
+    "MD5": "^1.2.1"
   }
 }
