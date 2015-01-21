@@ -43,12 +43,12 @@ module.exports = (grunt) ->
 		curl:
 			node_bin:
 				files:
-					'bin/node.exe': 'http://nodejs.org/dist/v0.10.28/node.exe'
+					'download_bin/node.exe': 'http://nodejs.org/dist/v0.10.28/node.exe'
 
 		copy:
 			node_bin:
 				files:
-					'dist/bin/node.exe': 'bin/node.exe'
+					'dist/bin/node.exe': 'download_bin/node.exe'
 
 			node_modules:
 				expand: true
@@ -86,7 +86,7 @@ module.exports = (grunt) ->
 				]
 
 	grunt.registerTask 'download_node_bin', ->
-		if not grunt.file.exists 'bin/node.exe'
+		if not grunt.file.exists 'download_bin/node.exe'
 			grunt.log.writeln 'Downloading Node binary...'
 			grunt.task.run 'curl:node_bin'
 
