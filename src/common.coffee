@@ -1,6 +1,6 @@
 fs = require 'fs'
 path = require 'path'
-md5 = require 'MD5'
+crypto = require 'crypto'
 minimatch = require 'minimatch'
 
 exports.minimatchMultiAny = (file, patterns, options) ->
@@ -14,6 +14,21 @@ exports.minimatchMulti = (file, patterns, options) ->
 		return false if not minimatch file, pattern, options
 
 	true
+
+exports.hashOfFile = (file, cb) ->
+	s = fs.createReadStream file
+	hash = crypto.createHash 'md5'
+
+	s
+	.on 'data', (data) ->
+		hash.update data
+
+	.on 'end', ->
+		hashStr = hash.digest 'hex'
+
+		cb null, hashStr
+
+	.on 'error', cb
 
 exports.getChecksums = (folder, excludePatterns, callback) ->
 	unless callback?
@@ -30,11 +45,12 @@ exports.getChecksums = (folder, excludePatterns, callback) ->
 			(exports.minimatchMulti file, excludePatterns, matchBase: true, nocase: true)
 				return next()
 
-		fs.readFile file, (err, buf) ->
+		key = (path.relative folder, file).replace /[\\]/g, '/'
+
+		exports.hashOfFile file, (err, hash) ->
 			return (console.error err.stack; next()) if err?
 
-			key = (path.relative folder, file).replace /[\\]/g, '/'
-			files[key] = md5 buf
+			files[key] = hash
 			next()
 
 	walker.on 'end', ->
