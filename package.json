@@ -5,6 +5,9 @@
   "license": "MIT",
   "main": "lib/index.js",
   "author": "Raymond Hammarling",
+  "bin": {
+    "mod-sync": "bin/mod-sync"
+  },
   "scripts": {
     "prepublish": "grunt build",
     "test": "grunt test"
