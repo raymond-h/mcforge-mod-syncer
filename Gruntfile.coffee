@@ -47,25 +47,25 @@ module.exports = (grunt) ->
 					'download_bin/node.v<%= nodeVersion %>.exe':
 						'http://nodejs.org/dist/v<%= nodeVersion %>/node.exe'
 
+		browserify:
+			main:
+				options:
+					transform: ['coffeeify']
+
+					browserifyOptions:
+						builtins: no
+						commondir: no
+						detectGlobals: no
+						insertGlobalVars: '__filename,__dirname'
+						extensions: ['.coffee', '.js', '.json']
+
+				files:
+					'tmp/main.js': ['./index.coffee']
+
 		copy:
 			node_bin:
 				files:
-					'dist/bin/node.exe': 'download_bin/node.v<%= nodeVersion %>.exe'
-
-			node_modules:
-				expand: true
-				cwd: 'node_modules'
-				src: ['**']
-				dest: 'dist/node_modules'
-				filter: (filepath) ->
-					pkg = grunt.config 'pkg'
-					(filepath.split /[\\/]/)[1] in Object.keys pkg.dependencies
-
-			lib:
-				expand: true
-				cwd: 'lib'
-				src: ['**/*']
-				dest: 'dist/lib'
+					'tmp/node.exe': 'download_bin/node.v<%= nodeVersion %>.exe'
 
 		compress:
 			dist:
@@ -75,14 +75,8 @@ module.exports = (grunt) ->
 				files: [
 					{
 						expand: true
-						cwd: 'dist'
-						src: ['**/*', '!run_sync.bat']
-						dest: '<%= pkg.name %>'
-					}
-					{
-						expand: true
-						cwd: 'dist'
-						src: ['run_sync.bat']
+						cwd: 'tmp'
+						src: ['**/*']
 						dest: ''
 					}
 				]
@@ -101,10 +95,10 @@ module.exports = (grunt) ->
 
 		contents = """
 			@ECHO off
-			"./#{pkg.name}/bin/node.exe" "./#{pkg.name}/#{pkg.main}" %*
+			"./#{pkg.name}/bin/node.exe" "./main.js" %*
 		"""
 
-		grunt.file.write 'dist/run_sync.bat', contents, encoding: 'utf-8'
+		grunt.file.write 'tmp/run_sync.bat', contents, encoding: 'utf-8'
 
 	grunt.registerTask 'default', ['build']
 
@@ -116,11 +110,9 @@ module.exports = (grunt) ->
 	grunt.registerTask 'watch-dev', ['watch:dev']
 
 	grunt.registerTask 'standalone', [
-		'build' # build entire code into /lib
+		'browserify:main' # build main script file
 		'download_node_bin' # download node binary to /bin
 		'copy:node_bin'
-		'copy:node_modules'
-		'copy:lib' # copy all stuff needed (/lib, /node_modules) to /dist
-		'write_run_bat' # write a start.bat file to /dist
-		'compress:dist' # zip up /dist
+		'write_run_bat' # write a start.bat file to /tmp
+		'compress:dist' # zip up /tmp
 	]

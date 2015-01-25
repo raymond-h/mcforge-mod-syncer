@@ -1,7 +1,7 @@
 node_modules/
 lib/
 download_bin/
-dist/
+tmp/
 
 config/
 mods/
