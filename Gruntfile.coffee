@@ -3,6 +3,7 @@ module.exports = (grunt) ->
 
 	grunt.initConfig
 		pkg: grunt.file.readJSON 'package.json'
+		nodeVersion: '0.10.28'
 
 		coffee:
 			build:
@@ -43,12 +44,13 @@ module.exports = (grunt) ->
 		curl:
 			node_bin:
 				files:
-					'download_bin/node.exe': 'http://nodejs.org/dist/v0.10.28/node.exe'
+					'download_bin/node.v<%= nodeVersion %>.exe':
+						'http://nodejs.org/dist/v<%= nodeVersion %>/node.exe'
 
 		copy:
 			node_bin:
 				files:
-					'dist/bin/node.exe': 'download_bin/node.exe'
+					'dist/bin/node.exe': 'download_bin/node.v<%= nodeVersion %>.exe'
 
 			node_modules:
 				expand: true
@@ -86,11 +88,13 @@ module.exports = (grunt) ->
 				]
 
 	grunt.registerTask 'download_node_bin', ->
-		if not grunt.file.exists 'download_bin/node.exe'
-			grunt.log.writeln 'Downloading Node binary...'
+		nodeVersion = grunt.config.get 'nodeVersion'
+
+		if not grunt.file.exists "download_bin/node.v#{nodeVersion}.exe"
+			grunt.log.writeln "Downloading Node v#{nodeVersion} binary..."
 			grunt.task.run 'curl:node_bin'
 
-		else grunt.log.writeln 'Node binary already downloaded!'
+		else grunt.log.writeln "Node v#{nodeVersion} binary already downloaded!"
 
 	grunt.registerTask 'write_run_bat', ->
 		pkg = grunt.config 'pkg'
