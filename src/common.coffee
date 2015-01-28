@@ -42,7 +42,7 @@ exports.getChecksums = (folder, excludePatterns, callback) ->
 		file = path.join root, fileStats.name
 
 		if excludePatterns.length > 0 and
-			(exports.minimatchMulti file, excludePatterns, matchBase: true, nocase: true)
+			(exports.minimatchMultiAny file, excludePatterns, matchBase: true, nocase: true)
 				return next()
 
 		key = (path.relative folder, file).replace /[\\]/g, '/'
