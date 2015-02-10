@@ -4,6 +4,8 @@ request = require 'request'
 {diff} = require 'deep-diff'
 mkdirp = require 'mkdirp'
 
+{argv} = require 'yargs'
+
 {client} = require './config'
 {folders, exclude} = client
 
@@ -19,22 +21,34 @@ handleDifferences = (differences) ->
 			excludePatterns = exclude[d.path[0]] ? []
 			return if minimatchMultiAny sourcePath, excludePatterns, matchBase: true, nocase: true
 
-			switch d.kind
-				when 'D'
-					fs.unlinkSync sourcePath
-					console.log "Deleted #{sourcePath}"
+			if not argv.checkOnly?
+				switch d.kind
+					when 'D'
+						fs.unlinkSync sourcePath
+						console.log "Deleted #{sourcePath}"
 
-				when 'N', 'E'
-					targetPath = path.join folders[d.path[0]], d.path[1]
+					when 'N', 'E'
+						targetPath = path.join folders[d.path[0]], d.path[1]
 
-					mkdirp (path.dirname targetPath), (err) ->
-						return console.error err.stack if err?
+						mkdirp (path.dirname targetPath), (err) ->
+							return console.error err.stack if err?
 
-						console.log "Downloading #{sourcePath}..."
-						request.get "http://#{hostAddress}/#{sourcePath}"
-						.pipe fs.createWriteStream targetPath
-						.on 'close', ->
-							console.log "Downloaded #{sourcePath}"
+							console.log "Downloading #{sourcePath}..."
+							request.get "http://#{hostAddress}/#{sourcePath}"
+							.pipe fs.createWriteStream targetPath
+							.on 'close', ->
+								console.log "Downloaded #{sourcePath}"
+
+			else
+				switch d.kind
+					when 'D'
+						console.log "---\t#{sourcePath}"
+
+					when 'N'
+						console.log "+++\t#{sourcePath}"
+
+					when 'E'
+						console.log "=/=\t#{sourcePath}"
 
 console.log 'Fetching file checksums...'
 request.get "http://#{hostAddress}/files-list.json",
@@ -54,7 +68,7 @@ request.get "http://#{hostAddress}/files-list.json",
 			getChecksums folders.config, (err, config) ->
 				return console.error err.stack if err?
 				
-				console.log 'Done'
+				console.log 'Done\n'
 
 				# console.log { mods, config }
 
