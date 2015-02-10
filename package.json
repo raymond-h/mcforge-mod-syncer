@@ -1,7 +1,7 @@
 {
   "name": "mcforge-mod-syncer",
   "description": "Easily keep mods and configs between client and server in sync",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "license": "MIT",
   "main": "lib/index.js",
   "author": "Raymond Hammarling",
