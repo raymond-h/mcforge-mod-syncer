@@ -67,6 +67,16 @@ module.exports = (grunt) ->
 				files:
 					'tmp/node.exe': 'download_bin/node.v<%= nodeVersion %>.exe'
 
+			mime_types:
+				files: [
+					{
+						expand: true
+						cwd: 'node_modules/request/node_modules/mime/types'
+						src: ['**/*']
+						dest: 'tmp/types'
+					}
+				]
+
 		compress:
 			dist:
 				options:
@@ -112,7 +122,7 @@ module.exports = (grunt) ->
 	grunt.registerTask 'standalone', [
 		'browserify:main' # build main script file
 		'download_node_bin' # download node binary to /bin
-		'copy:node_bin'
+		'copy:node_bin', 'copy:mime_types'
 		'write_run_bat' # write a start.bat file to /tmp
 		'compress:dist' # zip up /tmp
 	]
