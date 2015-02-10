@@ -48,7 +48,7 @@ handleDifferences = (differences) ->
 						console.log "+++\t#{sourcePath}"
 
 					when 'E'
-						console.log "=/=\t#{sourcePath}"
+						console.log "***\t#{sourcePath}"
 
 console.log 'Fetching file checksums...'
 request.get "http://#{hostAddress}/files-list.json",
