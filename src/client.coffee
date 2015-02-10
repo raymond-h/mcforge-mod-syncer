@@ -4,6 +4,8 @@ request = require 'request'
 {diff} = require 'deep-diff'
 mkdirp = require 'mkdirp'
 
+require 'colors' # extends Strings.prototype
+
 {argv} = require 'yargs'
 
 {client} = require './config'
@@ -42,13 +44,13 @@ handleDifferences = (differences) ->
 			else
 				switch d.kind
 					when 'D'
-						console.log "---\t#{sourcePath}"
+						console.log "---\t#{sourcePath}".red
 
 					when 'N'
-						console.log "+++\t#{sourcePath}"
+						console.log "+++\t#{sourcePath}".green
 
 					when 'E'
-						console.log "***\t#{sourcePath}"
+						console.log "~~~\t#{sourcePath}".yellow
 
 console.log 'Fetching file checksums...'
 request.get "http://#{hostAddress}/files-list.json",
